@@ -1,3 +1,4 @@
+import { ILogger } from './logger/logger.interface';
 import { ExceptionFilter } from './errors/exception.filter';
 import { LoggerService } from './logger/logger.service';
 import express, { Express } from "express";
@@ -8,11 +9,11 @@ export class App {
   app: Express;
   server: Server;
   port: number;
-  logger: LoggerService;
+  logger: ILogger;
   userController: UserController;
   exceptionFilter: ExceptionFilter;
 
-  constructor(logger: LoggerService, userController: UserController,exceptionFilter: ExceptionFilter) {
+  constructor(logger: ILogger, userController: UserController,exceptionFilter: ExceptionFilter) {
     this.app = express();
     this.port = 8000;
     this.logger = logger;
