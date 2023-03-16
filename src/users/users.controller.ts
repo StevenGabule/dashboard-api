@@ -48,12 +48,13 @@ export class UserController extends BaseController implements IUserController {
 	login(req: Request<{}, {}, UserLoginDto>, res: Response, next: NextFunction): void {
 		next(new HTTPError(401, 'Unauthorized.', 'login'));
 	}
+
 	async register({ body }: Request<{}, {}, UserRegisterDto>, res: Response, next: NextFunction): Promise<void> {
 		const result = await this.userService.createUser(body);
 		if (!result) {
 			return next(new HTTPError(422, 'Something goes wrong!'));
 		}
-		this.ok(res, result);
+		this.ok(res, { email: result.email, id: result.id });
 	}
 	forgotPassword(req: Request, res: Response, next: NextFunction): void {
 		this.ok(res, 'forgot password');
