@@ -20,13 +20,8 @@ export class UserController extends BaseController implements IUserController {
 	) {
 		super(loggerService);
 		this.bindRoutes([
-			{
-				path: '/register',
-				method: 'post',
-				func: this.register,
-				middleware: [new ValidateMiddleware(UserRegisterDto)],
-			},
-			{ path: '/login', method: 'post', func: this.login },
+			{ path: '/register', method: 'post', func: this.register, middleware: [new ValidateMiddleware(UserRegisterDto)] },
+			{ path: '/login', method: 'post', func: this.login, middleware: [new ValidateMiddleware(UserLoginDto)] },
 			{ path: '/login-with-google', method: 'post', func: this.loginGoogle },
 			{ path: '/forgot-password', method: 'post', func: this.forgotPassword },
 			{ path: '/reset-password', method: 'post', func: this.resetPassword },
@@ -45,8 +40,12 @@ export class UserController extends BaseController implements IUserController {
 		this.ok(res, 'login with apple');
 	}
 
-	login(req: Request<{}, {}, UserLoginDto>, res: Response, next: NextFunction): void {
-		next(new HTTPError(401, 'Unauthorized.', 'login'));
+	async login(req: Request<{}, {}, UserLoginDto>, res: Response, next: NextFunction): Promise<void> {
+		const result = await this.userService.validateUser(req.body);
+		if (!result) {
+			return next(new HTTPError(401, 'The email or password not found.', 'login'));
+		}
+		this.ok(res, {});
 	}
 
 	async register({ body }: Request<{}, {}, UserRegisterDto>, res: Response, next: NextFunction): Promise<void> {
