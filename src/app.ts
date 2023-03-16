@@ -23,6 +23,11 @@ export class App {
 		this.port = 8000;
 	}
 
+	useMiddleware(): void {
+		this.app.use(express.urlencoded({ extended: true }));
+		this.app.use(express.json());
+	}
+
 	useRouter(): void {
 		this.app.use('/users', this.userController.router);
 	}
@@ -32,6 +37,7 @@ export class App {
 	}
 
 	public async init(): Promise<void> {
+		this.useMiddleware();
 		this.useRouter();
 		this.useExceptionFilters();
 		this.server = this.app.listen(this.port);
