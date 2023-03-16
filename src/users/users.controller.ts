@@ -10,6 +10,7 @@ import 'reflect-metadata';
 import { UserLoginDto } from './dto/user-login.dto';
 import { UserRegisterDto } from './dto/user-register.dto';
 import { User } from './user.entity';
+import { ValidateMiddleware } from '../common/validate.middleware';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
@@ -19,7 +20,12 @@ export class UserController extends BaseController implements IUserController {
 	) {
 		super(loggerService);
 		this.bindRoutes([
-			{ path: '/register', method: 'post', func: this.register },
+			{
+				path: '/register',
+				method: 'post',
+				func: this.register,
+				middleware: [new ValidateMiddleware(UserRegisterDto)],
+			},
 			{ path: '/login', method: 'post', func: this.login },
 			{ path: '/login-with-google', method: 'post', func: this.loginGoogle },
 			{ path: '/forgot-password', method: 'post', func: this.forgotPassword },
