@@ -46,7 +46,7 @@ describe('User Service', () => {
 			}),
 		);
 
-		createdUser = await usersService.createUser({ email: 'a@r.com', name: 'jon', password: '1' });
+		createdUser = await usersService.createUser({ email: 'a@r.ru', name: 'jon', password: 'password' });
 		expect(createdUser?.id).toEqual(1);
 		expect(createdUser?.password).not.toEqual('1');
 	});

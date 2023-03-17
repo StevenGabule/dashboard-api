@@ -19,8 +19,8 @@ export class UserService implements IUserService {
 		const newUser = new User(email, name);
 		const salt = this.configService.get('SALT');
 		await newUser.setPassword(password, Number(salt));
-
 		const existingUser = await this.usersRepository.find(email);
+
 		if (existingUser) {
 			return null;
 		}
